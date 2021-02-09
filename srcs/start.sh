@@ -12,10 +12,9 @@ echo "ssl_certificate /etc/nginx/ssl/certs/localhost.crt;" >> /etc/nginx/snippet
 echo "ssl_certificate_key /etc/nginx/ssl/private/localhost.key;" >> /etc/nginx/snippets/self-signed.conf
 
 # LINK SITE
-ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/
 rm -rf /etc/nginx/sites-enabled/default
 echo 'Set autoindex'
-sed -i 's/INDEX/'"$autoindex"'/g' /etc/nginx/sites-available/localhost
+sed -i 's/INDEX/'"$autoindex"'/g' /etc/nginx/sites-enabled/localhost
 echo "CREATE DATABASE wordpress;" | mysql -u root --skip-password
 echo "UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user='root';" | mysql -u root --skip-password
 echo "GRANT ALL PRIVILEGES ON wordpress.* to 'root'@'localhost';" |  mysql -u root --skip-password
