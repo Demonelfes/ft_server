@@ -4,8 +4,6 @@ chown -R www-data /var/www/*
 chmod -R 755 /var/www/*
 
 #SSL certificate
-#mkdir /etc/nginx/ssl
-#openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/nginx/ssl/localhost.pem -keyout /etc/nginx/ssl/localhost.key -subj "/C=BR/ST=SP/L=SP/O=42 School/OU=joguntij/CN=localhost"
 
 mkdir /etc/nginx/ssl/ && mkdir /etc/nginx/ssl/certs/ /etc/nginx/ssl/private/
 chmod -R 700 /etc/nginx/ssl/
@@ -16,7 +14,8 @@ echo "ssl_certificate_key /etc/nginx/ssl/private/localhost.key;" >> /etc/nginx/s
 # LINK SITE
 ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/
 rm -rf /etc/nginx/sites-enabled/default
-
+echo 'Set autoindex'
+sed -i 's/INDEX/'"$autoindex"'/g' /etc/nginx/sites-available/localhost
 echo "CREATE DATABASE wordpress;" | mysql -u root --skip-password
 echo "UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user='root';" | mysql -u root --skip-password
 echo "GRANT ALL PRIVILEGES ON wordpress.* to 'root'@'localhost';" |  mysql -u root --skip-password
@@ -33,6 +32,4 @@ mv wordpress/ /var/www/localhost
 mv /var/wp-config.php /var/www/localhost/wordpress
 
 service php7.3-fpm start
-service nginx start
-
-bash
+nginx -g 'daemon off;'
